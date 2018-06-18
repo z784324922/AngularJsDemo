@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script type="text/javascript" src="../js/angular.min.js"></script>
+	<script type="text/javascript" src="../js/angular-sanitize.min.js"></script>
+	<style type="text/css">
+		#box{
+			width:100px;
+			height: 100px;
+		}
+		.abc{
+			background: red;
+		}
+	</style>
+</head>
+<body ng-app="myapp" ng-controller="mainController">
+	<!-- 
+	ng-init   初始化数据 初始化angular数据
+	ng-repeat 重复遍历数据
+	ng-src    动态绑定 img 的 src
+	ng-class  动态绑定 class
+	ng-controller   指定当前html的 控制器    mvc
+	 -->
+
+	<section ng-init="
+	myname='zuozuomu';
+	week=['Mon','Tur','Wed','Thu','Fri','Sat','Sun'];
+	mysrc='https://www.baidu.com/img/bd_logo1.png' ">
+		<h1>angular demo</h1>
+		<input type="text" ng-model="myname">
+		<h1>{{myname}}</h1>
+
+	</section> 
+	
+	<p ng-repeat="x in week">{{x}}</p>
+	<div ng-class="a" id="box"></div>
+	<h1>{{msg}}</h1>
+	<h1>{{html}}</h1>
+	<h1 ng-bind-html="html1"></h1>
+	<p ng-bind-html="html1"></p>
+	<img src="https://www.baidu.com/img/bd_logo1.png">
+	<img ng-src="mysrc" >
+	<img ng-src="{{mysrc}}">
+	
+
+	
+
+	<script>
+	// 创建module 
+	var  app =  angular.module("myapp",['ngSanitize']);// ng-app 指定 angular模块名称 [] 表示引入第三方插件，其他模块
+
+	// 声明控制器  ， 定义控制器
+	app.controller("mainController",function($scope){
+		//  $scope 表示当前控制器范围所有数据 和方法 
+		$scope.msg = "hello angularJS";
+
+		$scope.myname = "zuozuomu1234";
+
+		$scope.html1 = "<b>你今天开心吗?</b>";
+
+		$scope.a = 'abc';
+	})
+	</script>
+</body>
+</html>

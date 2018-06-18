@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>ui.route</title>
+	<!-- <base href="/angular1701/html"   /> -->
+	<script type="text/javascript" src="../js/angular.min.js"></script>
+	<!-- 1. 引入 ui.router js -->
+	<script type="text/javascript" src="../js/angular-ui-router.js"></script>
+	<script type="text/javascript" src="../js/jquery-1.10.1.min.js"></script>
+	<script type="text/javascript" src="../js/swiper-3.3.1.min.js"></script>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" href="../icon/iconfont.css" />
+	<link rel="stylesheet" href="../css/footer.css" />
+	<link rel="stylesheet" type="text/css" href="../css/wx.css">
+	<link rel="stylesheet" type="text/css" href="../css/swiper-3.4.1.min.css">
+	<style type="text/css">
+		.move{
+			animation:move 1.8s ease both;
+		}
+		@keyframes move{
+			0%{opacity: 0}
+			100%{opacity: 1}
+		}
+		.swiper-slide,img{
+			width:100%;
+			height:300px;
+		}
+	</style>
+</head>
+<body ng-app="app">
+	<!-- 4 加载模板视图 view -->
+	<ui-view class="view"></ui-view>
+	
+	<!-- 5  a 链接跳转   ui-sref='wx'     -   href='#/wx'    
+			ui-sref会自动生成 hreff链接
+			ui-sref-active="active" 路由高亮
+	-->
+	<footer >
+		<ul>
+			<li><a ui-sref="wx" class="ahref" ui-sref-active="active">
+				<i class="iconfont icon-weixin"></i>
+				<span>微信</span>
+			</a></li>
+			<li><a ui-sref="parent.phone" class="ahref" ui-sref-active="active">
+				<i class="iconfont icon-tongxunlu"></i>
+				<span>通讯录</span>
+			</a></li>
+			<li><a  ui-sref="find" class="ahref" ui-sref-active="active">
+				<i class="iconfont icon-faxian"></i>
+				<span>发现</span>
+			</a></li>
+			<li><a ui-sref="mine" class="ahref" ui-sref-active="active">
+				<i class="iconfont icon-iconfontwode"></i>
+				<span>我的</span>
+			</a></li>
+		</ul>
+	</footer>
+	<!--  -->
+
+	<script type="text/javascript">
+	// 2. 创建angular 模块 依赖 ui.router  第三方插件  
+	var app = angular.module("app",['ui.router'])
+
+	app.run(function($rootScope,$log){
+		$rootScope.$on("$stateChangeStart",(e,toState,toParams,fromState,fromParams)=>{
+			$log.debug('stateChangeStart');
+			$log.debug(toState);   // 跳转路由对象   .name
+			$log.debug(toParams);  //  跳转路由的参数对象
+			$log.debug(fromState); // 当前离开的路由对象   .name
+			$log.debug(fromParams);//  当前离开的路由参数  
+		})
+		$rootScope.$on("$stateChangeSuccess",()=>{
+
+		})
+
+		$rootScope.$on("$locationChangeStart",(e,next,current)=>{
+
+		});
+
+		$rootScope.$on("$viewContentLoaded",()=>{
+			$('.view').addClass("move")
+		})
+
+	})
+	//  路由重定向 
+	app.config(function($urlRouterProvider){
+		$urlRouterProvider.otherwise("/wx")
+	})
+	// 去除url 地址的 #
+	// 不能刷新页面  
+	app.config(function($locationProvider){
+		 // $locationProvider.html5Mode(true)
+	})
+	// 不区分大小写
+	app.config(function($urlMatcherFactoryProvider){
+		$urlMatcherFactoryProvider.caseInsensitive(true)
+	})
+	// 3. 配置路由   $stateProvider state(路由状态,options)
+	app.config(["$stateProvider",function($stateProvider){
+		$stateProvider
+			.state("wx",{
+				url:"/wx",
+				templateUrl:"../tpl/17.3/wx.html",
+				controller:"weixinController",
+				controllerAs:"weixinCtrl",
+				data:{
+					wxData1:"精通angular",
+					wxData2:"熟练掌握react",
+					wxData3:"精通vue"
+				}
+			})
+			//  phone.html detail.html search.html  子路由
+			.state("parent",{      // phone  tab 父级路由
+				url:"/parent",
+				abstract:true,  // 声明 父路由  主视图
+				templateUrl:"../tpl/17.3/parent.html",
+				controller:"parentController",
+				controllerAs:"parentCtrl",
+				resolve:{
+					getParentData($http){
+						return $http.get("../data/employeesParent.cfm")
+							.then((res)=>{
+								return res.data;
+							})
+					}
+				}
+			})
+			.state("parent.phone",{   //  parent.phone 声明子路由
+				url:"/phone",
+				templateUrl:"../tpl/17.3/phone.html",
+				controller:"phoneController",
+				controllerAs:"phoneCtrl",
+				resolve:{
+					getListInfo:function($http,$timeout){
+						return $http({
+							url:"../data/person.cfm",
+							method:"get",
+							params:{
+								id:1
+							}
+						}).then((res)=>{
+							console.log(res.data);
+							return $timeout(function(){
+								return res.data
+							},0)
+						})
+					}
+				}
+			})
+			.state("find",{
+				url:"/find",
+				templateUrl:"../tpl/17.3/find.html",
+				controller:"findController",
+				controllerAs:"findCtrl",
+				data:{
+					findData1:"精通nodeJS",
+					findData2:"熟练掌握mongodb数据库",
+					findData3:"自学精通微信小程序!"
+				}
+			})
+			.state("mine",{
+				url:"/mine",
+				templateUrl:"../tpl/17.3/mine.html",
+				controller:"mineController",
+				controllerAs:"mineCtrl"
+			})
+			.state("parent.detail111",{
+				url:"/detail1234/:id/:name?",
+				templateUrl:"../tpl/17.3/detail.html",
+				controller:"detailController",
+				controllerAs:"detailCtrl"
+			})
+			.state("visit",{
+				url:"/visit/:id/:cityName?",
+				templateUrl:"../tpl/17.3/visit.html",
+				controller:"visitController",
+				controllerAs:"visitCtrl"
+			})
+			.state("parent.search",{
+				url:"/search/:firstName?/:info",
+				templateUrl:"../tpl/17.3/search.html",
+				controller:"searchController",
+				controllerAs:"searchCtrl"
+			})
+	}]);
+
+	// 路由服务提供者  $routeProvider === $stateProvider
+	// 路由服务对象    $route         === $state  (go)
+	// 路由参数服务    $routeParams   === $stateParams
+	// a               href='#/detail/1/qwer'  ui-sref='detail111({id:1,name:qwer})'
+	// click           $location.url           $state.go()
+	app.controller("weixinController",function($state){
+		this.title = "微信";
+		this.msg = "hello ui.router";
+		this.word = "天道酬勤,未来属于努力的你们!";
+
+		console.log($state);
+		console.log($state.current);
+
+		this.data = $state.current.data;
+		this.findData = $state.get("find").data;
+
+		console.log(this.findData);
+	});
+	app.controller("parentController",function(getParentData,$scope){
+		this.parentData = getParentData[0];
+		// console.log(this.parentData);
+
+
+		this.showHeader = false;  //隐藏
+
+		$scope.$on("sendTitle",(e,data)=>{
+			// console.log(e);
+			// console.log(data);
+			this.title = data;
+		})
+
+		$scope.$on("$stateChangeSuccess",(e,toState,toParams,fromState,fromParams)=>{
+			// console.log("state");
+			// console.log(toState);
+			// console.log(toState.name);
+			if(toState.name.indexOf("phone")!=-1){
+				this.showHeader = false;
+			}else{
+				this.showHeader = true;
+			}
+
+		})
+
+	})
+	app.controller("phoneController",function(getListInfo,$state,$scope){
+		this.title = "通讯录";
+		this.list = getListInfo;
+
+		// 刷新路由
+
+		console.log($state);
+
+		this.reload = function(){
+			$state.reload();
+		}
+
+		$scope.$emit("sendTitle",this.title);
+
+		this.search = function(firstName){
+			console.log(firstName);
+			var info = "work-hard";
+			$state.go("parent.search",{
+				info:info,
+				firstName:firstName
+			})
+		}
+	})
+
+	app.controller("findController",function($scope,$http){
+		this.title = "发现";
+
+		this.swiperBanner = null;
+
+		$http.get("../data/banner.json",{})
+		.then((res)=>{
+			console.log(res);
+			this.swiperBanner = res.data; 
+
+		})
+		$scope.$on("$viewContentLoaded",()=>{
+
+		})
+		$scope.$watch("swiperBanner",function(newVal,oldval){
+			console.log(123)
+			setTimeout(()=>{
+				var swiper = new Swiper("#swiper",{
+					autoPlay:true,
+					loop:true
+				})
+			},10)
+		})
+	})
+	app.controller("mineController",function($scope,$state){
+		this.title = "我的";
+		this.cityList = [
+			{
+				name:"东京",
+				id:1
+			},
+			{
+				name:"马尔代夫",
+				id:2
+			},
+			{
+				name:"迪拜",
+				id:3
+			},
+			{
+				name:"海南",
+				id:4
+			},
+			{
+				name:"成都",
+				id:5
+			}
+		];
+		this.gotoVisit = function(id,name){
+			console.log(id,name);
+
+			// $state.go
+			// $state.go("visit",{
+			// 	id:id,
+			// 	cityName:name
+			// })
+			
+		}
+	})
+	app.controller("detailController",function($state,$stateParams,$http,$scope){
+		console.log($state);
+		console.log($stateParams)   //ui.router 路由参数
+
+		this.firstName = $stateParams.name;
+		this.id = $stateParams.id;
+
+
+		$scope.$emit("sendTitle",this.firstName);  //title发送过去
+		$http({
+			url:"../data/personDetail.cfm",
+			method:"get"
+		}).then((res)=>{
+			var data = res.data.id;
+			console.log(data);
+			this.personInfo = data[this.id];  //key-value
+			console.log(this.personInfo);
+		});
+
+	})
+
+	app.controller("visitController",function($stateParams){
+		this.title = $stateParams.cityName;
+		this.cityId = $stateParams.id;
+	})
+
+	app.controller("searchController",function($stateParams,$http,$upperFirst,$scope){
+		this.firstName = $stateParams.firstName;
+		var empArr = [];
+		this.show = false;
+		if(this.firstName){
+			this.title = this.firstName;
+			$scope.$emit("sendTitle",this.title);
+			this.firstName = $upperFirst.set(this.firstName);
+			$http({
+				url:"../data/personsearch.cfm",
+				method:"get",
+				params:{
+					firstName:this.firstName
+				}
+			}).success((res)=>{
+				console.log(res);
+				// 判断 输入 姓 是否正确  
+				var mydata = res.firstName;
+				console.log(mydata);
+				for(var i in mydata){
+					if(i==this.firstName){
+						empArr.push(mydata[i])
+					}
+				};
+				console.log(empArr);
+				if(empArr[0]){
+					this.empList = empArr;
+				}else{
+					this.show = true;
+				}
+
+			})
+
+		}else{
+			this.title = "查询全部员工信息";
+			$scope.$emit("sendTitle",this.title);
+			$http({
+				url:"../data/personsearch.cfm",
+				method:"get"
+			}).success((res)=>{
+				this.empList = res.firstName;
+			})
+		}
+
+
+	})
+
+	app.factory("$upperFirst",function(){
+		return {
+			set(str){
+				str = str.split("");
+				var s =  str.map(function(item,idx){
+					if(idx==0){
+						item = item.toUpperCase();
+						return item;
+					}else{
+						item = item.toLowerCase();
+						return item;
+					}
+				})
+				
+				return s.join("");
+			}
+		}
+	})
+	</script>
+</body>
+</html>

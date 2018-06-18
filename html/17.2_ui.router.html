@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>ui.route</title>
+	<!-- <base href="/angular1701/html"   /> -->
+	<script type="text/javascript" src="../js/angular.min.js"></script>
+	<!-- 1. 引入 ui.router js -->
+	<script type="text/javascript" src="../js/angular-ui-router.js"></script>
+
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" href="../icon/iconfont.css" />
+	<link rel="stylesheet" href="../css/footer.css" />
+	<link rel="stylesheet" type="text/css" href="../css/wx.css">
+</head>
+<body ng-app="app">
+	<!-- 4 加载模板视图 view -->
+	<ui-view></ui-view>
+	
+	<!-- 5  a 链接跳转   ui-sref='wx'     -   href='#/wx'    
+			ui-sref会自动生成 hreff链接
+			ui-sref-active="active" 路由高亮
+	-->
+	<footer >
+		<ul>
+			<li><a ui-sref="wx" class="ahref" ui-sref-active="active">
+				<i class="iconfont icon-weixin"></i>
+				<span>微信</span>
+			</a></li>
+			<li><a ui-sref="phone" class="ahref" ui-sref-active="active">
+				<i class="iconfont icon-tongxunlu"></i>
+				<span>通讯录</span>
+			</a></li>
+			<li><a  ui-sref="find" class="ahref" ui-sref-active="active">
+				<i class="iconfont icon-faxian"></i>
+				<span>发现</span>
+			</a></li>
+			<li><a ui-sref="mine" class="ahref" ui-sref-active="active">
+				<i class="iconfont icon-iconfontwode"></i>
+				<span>我的</span>
+			</a></li>
+		</ul>
+	</footer>
+	<!--  -->
+
+	<script type="text/javascript">
+	// 2. 创建angular 模块 依赖 ui.router  第三方插件  
+	var app = angular.module("app",['ui.router'])
+
+	//  路由重定向 
+	app.config(function($urlRouterProvider){
+		$urlRouterProvider.otherwise("/wx")
+	})
+	// 去除url 地址的 #
+	// 不能刷新页面  
+	app.config(function($locationProvider){
+		 // $locationProvider.html5Mode(true)
+	})
+	// 不区分大小写
+	app.config(function($urlMatcherFactoryProvider){
+		$urlMatcherFactoryProvider.caseInsensitive(true)
+	})
+	// 3. 配置路由   $stateProvider state(路由状态,options)
+	app.config(["$stateProvider",function($stateProvider){
+		$stateProvider
+			.state("wx",{
+				url:"/wx",
+				templateUrl:"../tpl/17.1/wx.html",
+				controller:"weixinController",
+				controllerAs:"weixinCtrl"
+			})
+			.state("phone",{
+				url:"/phone",
+				templateUrl:"../tpl/17.1/phone.html",
+				controller:"phoneController",
+				controllerAs:"phoneCtrl",
+				resolve:{
+					getListInfo:function($http,$timeout){
+						return $http({
+							url:"../data/person.cfm",
+							method:"get",
+							params:{
+								id:1
+							}
+						}).then((res)=>{
+							console.log(res.data);
+							return $timeout(function(){
+								return res.data
+							},0)
+						})
+					}
+				}
+			})
+			.state("find",{
+				url:"/find",
+				templateUrl:"../tpl/17.1/find.html",
+				controller:"findController",
+				controllerAs:"findCtrl"
+			})
+			.state("mine",{
+				url:"/mine",
+				templateUrl:"../tpl/17.1/mine.html",
+				controller:"mineController",
+				controllerAs:"mineCtrl"
+			})
+			.state("detail111",{
+				url:"/detail1234/:id/:name?",
+				templateUrl:"../tpl/17.1/detail.html",
+				controller:"detailController",
+				controllerAs:"detailCtrl"
+			})
+			.state("visit",{
+				url:"/visit/:id/:cityName?",
+				templateUrl:"../tpl/17.1/visit.html",
+				controller:"visitController",
+				controllerAs:"visitCtrl"
+			})
+			.state("search",{
+				url:"/search/:firstName?/:info",
+				templateUrl:"../tpl/17.1/search.html",
+				controller:"searchController",
+				controllerAs:"searchCtrl"
+			})
+	}]);
+
+	// 路由服务提供者  $routeProvider === $stateProvider
+	// 路由服务对象    $route         === $state  (go)
+	// 路由参数服务    $routeParams   === $stateParams
+	// a               href='#/detail/1/qwer'  ui-sref='detail111({id:1,name:qwer})'
+	// click           $location.url           $state.go()
+	app.controller("weixinController",function(){
+		this.title = "微信";
+		this.msg = "hello ui.router";
+		this.word = "天道酬勤,未来属于努力的你们!";
+	});
+
+	app.controller("phoneController",function(getListInfo,$state){
+		this.title = "通讯录";
+		this.list = getListInfo;
+
+		// 刷新路由
+
+		this.reload = function(){
+			$state.reload();
+		}
+
+
+		this.search = function(firstName){
+			console.log(firstName);
+			var info = "work-hard";
+			$state.go("search",{
+				info:info,
+				firstName:firstName
+			})
+		}
+	})
+
+	app.controller("findController",function($scope){
+		this.title = "发现";
+	})
+	app.controller("mineController",function($scope,$state){
+		this.title = "我的";
+		this.cityList = [
+			{
+				name:"东京",
+				id:1
+			},
+			{
+				name:"马尔代夫",
+				id:2
+			},
+			{
+				name:"迪拜",
+				id:3
+			},
+			{
+				name:"海南",
+				id:4
+			},
+			{
+				name:"成都",
+				id:5
+			}
+		];
+		this.gotoVisit = function(id,name){
+			console.log(id,name);
+
+			// $state.go
+			// $state.go("visit",{
+			// 	id:id,
+			// 	cityName:name
+			// })
+			
+		}
+	})
+	app.controller("detailController",function($state,$stateParams,$http){
+		console.log($state);
+		console.log($stateParams)   //ui.router 路由参数
+
+		this.firstName = $stateParams.name;
+		this.id = $stateParams.id;
+
+		$http({
+			url:"../data/personDetail.cfm",
+			method:"get"
+		}).then((res)=>{
+			var data = res.data.id;
+			console.log(data);
+			this.personInfo = data[this.id];  //key-value
+			console.log(this.personInfo);
+		});
+
+	})
+
+	app.controller("visitController",function($stateParams){
+		this.title = $stateParams.cityName;
+		this.cityId = $stateParams.id;
+	})
+
+	app.controller("searchController",function($stateParams,$http,$upperFirst){
+		this.firstName = $stateParams.firstName;
+		var empArr = [];
+		this.show = false;
+		if(this.firstName){
+			this.title = this.firstName;
+			this.firstName = $upperFirst.set(this.firstName);
+			$http({
+				url:"../data/personsearch.cfm",
+				method:"get",
+				params:{
+					firstName:this.firstName
+				}
+			}).success((res)=>{
+				console.log(res);
+				// 判断 输入 姓 是否正确  
+				var mydata = res.firstName;
+				console.log(mydata);
+				for(var i in mydata){
+					if(i==this.firstName){
+						empArr.push(mydata[i])
+					}
+				};
+				console.log(empArr);
+				if(empArr[0]){
+					this.empList = empArr;
+				}else{
+					this.show = true;
+				}
+
+			})
+
+		}else{
+			this.title = "查询全部员工信息";
+			$http({
+				url:"../data/personsearch.cfm",
+				method:"get"
+			}).success((res)=>{
+				this.empList = res.firstName;
+			})
+		}
+	})
+
+	app.factory("$upperFirst",function(){
+		return {
+			set(str){
+				str = str.split("");
+				var s =  str.map(function(item,idx){
+					if(idx==0){
+						item = item.toUpperCase();
+						return item;
+					}else{
+						item = item.toLowerCase();
+						return item;
+					}
+				})
+				
+				return s.join("");
+			}
+		}
+	})
+	</script>
+</body>
+</html>

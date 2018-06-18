@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>ui.route</title>
+	<base href="/angular1701/html"   />
+	<script type="text/javascript" src="../js/angular.min.js"></script>
+	<!-- 1. 引入 ui.router js -->
+	<script type="text/javascript" src="../js/angular-ui-router.js"></script>
+
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" href="../icon/iconfont.css" />
+	<link rel="stylesheet" href="../css/footer.css" />
+	<link rel="stylesheet" type="text/css" href="../css/wx.css">
+</head>
+<body ng-app="app">
+	<!-- 4 加载模板视图 view -->
+	<ui-view></ui-view>
+	
+	<!-- 5  a 链接跳转   ui-sref='wx'     -   href='#/wx'    
+			ui-sref会自动生成 hreff链接
+			ui-sref-active="active" 路由高亮
+	-->
+	<footer >
+		<ul>
+			<li><a ui-sref="wx" class="ahref" ui-sref-active="active">
+				<i class="iconfont icon-weixin"></i>
+				<span>微信</span>
+			</a></li>
+			<li><a ui-sref="phone" class="ahref" ui-sref-active="active">
+				<i class="iconfont icon-tongxunlu"></i>
+				<span>通讯录</span>
+			</a></li>
+			<li><a  ui-sref="find" class="ahref" ui-sref-active="active">
+				<i class="iconfont icon-faxian"></i>
+				<span>发现</span>
+			</a></li>
+			<li><a ui-sref="mine" class="ahref" ui-sref-active="active">
+				<i class="iconfont icon-iconfontwode"></i>
+				<span>我的</span>
+			</a></li>
+		</ul>
+	</footer>
+	<!--  -->
+
+	<script type="text/javascript">
+	// 2. 创建angular 模块 依赖 ui.router  第三方插件  
+	var app = angular.module("app",['ui.router'])
+
+	//  路由重定向 
+	app.config(function($urlRouterProvider){
+		$urlRouterProvider.otherwise("/wx")
+	})
+	// 去除url 地址的 #
+	// 不能刷新页面  
+	app.config(function($locationProvider){
+		 $locationProvider.html5Mode(true)
+	})
+	// 不区分大小写
+	app.config(function($urlMatcherFactoryProvider){
+		$urlMatcherFactoryProvider.caseInsensitive(true)
+	})
+	// 3. 配置路由   $stateProvider state(路由状态,options)
+	app.config(["$stateProvider",function($stateProvider){
+		$stateProvider
+			.state("wx",{
+				url:"/wx",
+				template:"<h1>微信....</h1>"
+			})
+			.state("phone",{
+				url:"/phone",
+				template:"<h1>通讯录....</h1>"
+			})
+			.state("find",{
+				url:"/find",
+				template:"<h1>发现....</h1>"
+			})
+			.state("mine",{
+				url:"/mine",
+				template:"<h1>我的....</h1>"
+			})
+	}])
+
+	</script>
+</body>
+</html>

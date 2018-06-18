@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>ng-repeat</title>
+	<script type="text/javascript" src="../js/angular.min.js"></script>
+	<style type="text/css">
+		td{
+			width: 120px;
+			height: 40px;
+			border: 1px solid #ccc;
+			text-align: center;
+		}
+		.box{
+			width:100px;
+			height:100px;
+			background: red;
+		}
+	</style>
+</head>
+<body ng-app="app" ng-controller="main">
+		<h1>{{count}}</h1>
+		<input type="text" ng-model="num">
+		<h1 ng-click="count=count+10">惦记我+10</h1>
+		<h1 ng-click="add(num)">add+10</h1>
+		<h1 ng-mousemove="count=count+1">{{count}}</h1>
+		<h1 ng-keypress="count=count+1">{{count}}</h1>
+		<input type="text" ng-keydown="count=count+1">
+		<input type="text" ng-keyup = "count=count+1">
+		<input type="text" placeholder="change"  ng-change="add(40)" ng-model="sum">
+
+		<div>
+			<h1>ng-if</h1>
+			<button ng-click="ngif=!ngif">{{ngif?"点击隐藏":"点击显示"}}</button>
+			<h1 ng-if="ngif">出去面试一定要落落大方!</h1>
+		</div>
+
+		<div>
+			<h1>ng-show</h1>
+			<button ng-click="ngshow=!ngshow">{{ngshow?"点击隐藏":"点击显示"}}</button>
+			<h1 ng-show="ngshow">出去面试一定要自信死怼!</h1>
+		</div>
+
+		<div ng-class="getClass()"></div>
+	<script type="text/javascript">
+		function change(){
+ 			alert(1111);
+ 		}
+	 	var app = angular.module("app",[]);
+	 	app.controller("main",['$scope',($scope)=>{
+	 		$scope.count = 0;
+
+	 		$scope.add = function(num){
+	 			$scope.count = $scope.count+parseInt(num);
+	 		}
+
+	 		$scope.input  = function(){
+	 			console.log(111);
+	 		}
+
+	 		$scope.ngif = true;
+	 		$scope.ngshow = true;
+	 		$scope.getClass = function(){
+	 			//ng-class 返回一定是class 
+	 			return "box";
+	 		}
+	 	}])
+	</script>
+</body>
+</html>
+
+
+<!--
+ng-click
+ng-dbclick ?
+ng-focus
+ng-blur
+ng-input
+ng-mouseover
+ng-keydown 
+ng-keyup ?
+事件指令:
+ng-focus
+ng-click
+ng-dblclick
+ng-mousedown
+ng-mouseenter
+ng-mouseleave
+ng-mousemove
+ng-keydown
+ng-keyup
+ng-keypress
+ng-change  必须配合 ng-model 
+
+事件执行  表达式  函数
+ng-model  绑定 HTML 控制器的值到应用数据。应用程序
+指令：
+ng-if
+定义和用法
+ng-if 指令用于在表达式为 false 时移除 HTML 元素。
+如果 if 语句执行的结果为 true，会添加移除元素，并显示。
+而 ng-if 是从 DOM 中移除元素。
+ng-show 样式的显示隐藏 
+
+ng-disabled：规定一个元素是否被禁用；
+
+ng-options:  下拉列表选项
+ng-src 指令覆盖了 <img> 元素的 src 属性。
+如果你使用了 AngularJS 代码设置图片地址，请使用 ng-src 指令替代 src 属性。
+
+事件指令:
+ng-focus
+ng-click
+ng-dblclick
+ng-mousedown
+ng-mouseenter
+ng-mouseleave
+ng-mousemove
+ng-keydown
+ng-keyup
+ng-keypress
+ng-change
+
+ng-class 指令用于给 HTML 元素动态绑定一个或多个 CSS类。
+ng-class 指令的值可以是字符串，对象，或一个数组，函数。
+如果是字符串，多个类名使用空格分隔。
+如果是对象，需要使用 key-value 对，key 是一个布尔值，value 为你想要添加的类名。只有在 key 为 true 时类才会被添加。
+如果是数组，可以由字符串或对象组合组成，数组的元素可以是字符串或对象。
+		-->

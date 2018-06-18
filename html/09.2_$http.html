@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>过滤器</title>
+	<script type="text/javascript" src="../js/angular.min.js"></script>
+	<script src="../js/jquery-1.10.1.min.js"></script>
+	<style type="text/css">
+		table{
+			margin:30px auto;
+		}
+		td{
+			width: 120px;
+			height: 40px;
+			border: 1px solid #ccc;
+			text-align: center;
+		}
+
+		
+	</style>
+</head>
+<body ng-app="app" ng-controller="main">
+		
+	<!--
+		$http   类似   ajax
+		$.ajax({
+			type,
+			saync,
+			jsonp,
+			data:{
+				
+			},
+			url:url
+			success(){
+				
+			},
+			error(){
+				
+			}
+			complete(){
+				
+			}
+			finally(){
+				
+			}
+		})
+		
+		$.get().then()
+		$.post().then()
+		$.getJSON()
+		$.jsonP()
+		
+	-->
+	
+	<div>
+		<input type="text" ng-model="txt" ng-change="change()"/>
+		
+		<ul>
+			
+			<li ng-repeat="x in list">{{x}}</li>
+		</ul>
+	</div>	
+	<script type="text/javascript">
+
+		var app = angular.module("app",[])
+			.controller("main",($scope,$http)=>{
+				$http({
+					url:"../data/employee.cfm",
+					method:"get",
+					params:{
+						id:123456
+					}
+				}).success((res)=>{
+					console.log(res)
+				});
+				
+				$scope.id = 'qwer';
+				
+				// get 请求   $http.get(url,options)
+				$http.get("../data/data.json?id=",{params:{
+					id:"wqerrqwewq"
+				}}).then((res)=>{
+					console.log(res.data);
+				});
+				
+				// post 请求  $http.post(url,data,options)
+				$http.post("http://localhost:7000/login",{telephone:"123455",password:"qwer"},{})
+				.then((res)=>{
+					console.log(res.data);
+				});
+				
+				// jsonp跨域请求   回调函数=JSON_CALLBACK   cb=JSON_CALLBACK
+				$http.jsonp("http://datainfo.duapp.com/shopdata/getGoods.php?callback=JSON_CALLBACK").then((res)=>{
+					console.log(res.data);
+				})
+				
+				$http.jsonp("http://datainfo.duapp.com/shopdata/getGoods.php",{params:{
+					callback:"JSON_CALLBACK"
+				}}).then((res)=>{
+					console.log(res.data);
+				});
+				
+				$scope.txt = "";
+				
+				
+				$scope.change = function(){
+					console.log($scope.txt);
+					var url = 'https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd=pp';
+					
+					$http.jsonp("https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su",{
+						params:{
+							wd:$scope.txt,
+							cb:"JSON_CALLBACK"
+						}
+					}).then((res)=>{
+						console.log(res.data);
+						$scope.list = res.data.s;
+					});
+				}
+			});
+			
+
+			app.factory("sendService",function(){
+				
+			})
+			
+	
+	</script>
+</body>
+</html>

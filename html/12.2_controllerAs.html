@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>过滤器</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" href="../icon/iconfont.css" />
+	<link rel="stylesheet" href="../css/footer.css" />
+	<link rel="stylesheet" type="text/css" href="../css/wx.css">
+	<script type="text/javascript" src="../js/angular.min.js"></script>
+	<script src="../js/jquery-1.10.1.min.js"></script>
+	<style type="text/css">
+		
+	</style>
+</head>
+<body ng-app="app" >
+	
+	<ng-view class="view"></ng-view>
+	<footer ng-show="show">
+		<ul>
+			<li><a href="#/wx" class="ahref" 
+				
+				ng-class="currentIdx==0?'active':'' ">
+				<i class="iconfont icon-weixin"></i>
+				<span>微信</span>
+			</a></li>
+			<li><a href="#/phone" class="ahref" 
+				
+				 ng-class="currentIdx==1?'active':'' ">
+				<i class="iconfont icon-tongxunlu"></i>
+				<span>通讯录</span>
+			</a></li>
+			<li><a href="#/find" class="ahref" 
+				
+				ng-class="currentIdx==2?'active':'' ">
+				<i class="iconfont icon-faxian"></i>
+				<span>发现</span>
+			</a></li>
+			<li><a href="#/mine" class="ahref" 
+				
+				ng-class="currentIdx==3?'active':'' ">
+				<i class="iconfont icon-iconfontwode"></i>
+				<span>我的</span>
+			</a></li>
+		</ul>
+	</footer>
+
+	<script src="../js/angular-route.min.js"></script>
+	
+	<script>
+	
+		var app = angular.module("app",['ngRoute'])
+			.run(function($rootScope,$location){
+				$rootScope.currentIdx = 0;
+				$rootScope.show = true;
+				
+				var url = $location.absUrl();  
+				
+				var route = url.split("#/")[1];
+				console.log(route);
+
+				var length = url.split("/").length;
+				console.log(length);
+				
+				
+				switch(route){
+					case "wx":
+					$rootScope.currentIdx = 0;
+					break;
+					case "phone":
+					$rootScope.currentIdx = 1;
+					break;
+					case "find":
+					$rootScope.currentIdx = 2;
+					break;
+					case "mine":
+					$rootScope.currentIdx = 3;
+					break;
+					default:
+					$rootScope.currentIdx = 0;
+					break;
+				}
+				
+				
+				var oa = document.querySelectorAll(".ahref");
+				console.log(oa);
+				
+				angular.forEach(oa,(item,idx)=>{
+					console.log(idx);
+					item.onclick = function(){
+						$rootScope.currentIdx =  idx;
+
+					}
+				})
+			})
+			.config(function($routeProvider){
+				//  URL地址忽略大小  
+				$routeProvider
+					.when("/wx",{
+						templateUrl:"../tpl/12/wx.html",
+						// controller:"weixinController as weixinCtrl"
+						controller:"weixinController",
+						controllerAs:"weixinCtrl"
+					})
+					.when("/phone",{
+						templateUrl:"../tpl/12/phone.html",
+						// controller:"phoneController as phoneCtrl"
+						controller:"phoneController",
+						controllerAs:"phoneCtrl"
+					})
+					.when("/find",{
+						templateUrl:"../tpl/12/find.html",
+						// controller:"findController as findCtrl"
+						controller:"findController",
+						controllerAs:"findCtrl"
+					})
+					.when("/mine",{
+						templateUrl:"../tpl/12/mine.html",
+						// controller:"mineController as mineCtrl"
+						controller:"mineController",
+						controllerAs:"mineCtrl"
+					})
+					// /:id 表示参数  ?表示参数可写不不写
+					.when("/detail/:id/:name?",{
+						templateUrl:"../tpl/12/detail.html",
+						controller:"detailController",
+						controllerAs:"detailCtrl"
+					})
+					.otherwise({
+						redirectTo:"/wx"
+					})
+			})
+
+			.controller("weixinController",function($scope){
+				this.title = "微信";
+				this.msg = "hello angular";
+				this.word = "学好angular,武汉吃得消!";
+
+			})
+			.controller("phoneController",function($scope,$http){
+				this.title = "通讯录";
+
+				$http({
+					url:"../data/person.cfm",
+					method:"get",
+					params:{
+						id:1
+					}
+				}).then((res)=>{
+					console.log(res.data);
+					this.list = res.data;
+				});
+
+
+			})
+			.controller("findController",function($scope){
+				this.title = "发现";
+			})
+			.controller("mineController",function($scope){
+				this.title = "我的"
+			})
+			.controller("detailController",function($scope,$route,$routeParams,$http,$rootScope){
+				console.log($route); //路由对象
+				console.log($routeParams); // 路由参数对象
+				// $rootScope.show = false;
+				this.firstName = $routeParams.name;
+				var id = $routeParams.id*1+1;
+				console.log(id);
+				$http({
+					url:"../data/personDetail.cfm",
+					method:"get"
+				}).then((res)=>{
+					var data = res.data.id;
+					console.log(data);
+					this.personInfo = data[id];  //key-value
+					console.log(this.personInfo);
+				});
+			})
+	</script>
+</body>
+</html>

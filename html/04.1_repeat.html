@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>ng-repeat</title>
+	<script type="text/javascript" src="../js/angular.min.js"></script>
+	<style type="text/css">
+		td{
+			width: 120px;
+			height: 40px;
+			border: 1px solid #ccc;
+			text-align: center;
+		}
+	</style>
+</head>
+<body ng-app="app" ng-controller="main">
+	<h1 ng-bind="msg"></h1>
+	<ul ng-repeat="p in pro">
+		<li>{{p.name}} ---Index=== {{$index}}</li>
+		<ol >
+			<li  data-id="{{$index}}">{{c.name}}--Index==={{$index}}  parentIndex==={{$parent.$index}}</li>
+		</ol>
+	</ul>
+	<script type="text/javascript">
+		var app = angular.module("app",[])
+			.controller("main",['$scope','$http','$timeout',($scope,$h,$t)=>{
+				$scope.msg = "hello angular";
+
+				var provinces = [{
+			        name: "浙江",
+			        cities: [{
+			            name: '金华'
+			        }, {
+			            name: '杭州'
+			        }, {
+			            name: '温州'
+			        }, ]
+			    }, {
+			        name: "湖北",
+			        cities: [{
+			            name: '武汉'
+			        }, {
+			            name: '襄樊'
+			        }, {
+			            name: '黄冈'
+			        }, ]
+			    }, {
+			        name: "江苏",
+			        cities: [{
+			            name: '南京'
+			        }, {
+			            name: '徐州'
+			        }, {
+			            name: '连云港'
+			        }, ]
+			    }];
+
+			    $scope.pro = provinces; 
+			}]);
+	</script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>过滤器</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<script type="text/javascript" src="../js/angular.min.js"></script>
+	<script src="../js/jquery-1.10.1.min.js"></script>
+	<style type="text/css">
+		
+	</style>
+</head>
+<body ng-app="app" >
+	<!-- 4 视图 接受 模板  ng-view  -->
+	<ng-view></ng-view>
+	
+	<!--5 footer a 链接跳转    -->
+	<ul>
+		<li><a href="#/wx">微信</a></li>
+		<li><a href="#/phone">通讯录</a></li>
+		<li><a href="#/find">发现</a></li>
+		<li><a href="#/mine">我的</a></li>
+	</ul>
+	
+	<!-- 1. 引人  route.js-->
+	<script src="../js/angular-route.min.js"></script>
+	
+	<script>
+		// 2. 声明插件  module
+		var app = angular.module("app",["ngRoute"]);
+		
+		// 3.配置路由   hashhistory # 
+		app.config(["$routeProvider",function($routeProvider){
+			$routeProvider
+				.when("/wx",{
+					template:"<h1>微信</h1>"
+				})
+				.when("/phone",{
+					template:"<h1>联系人</h1>"
+				})
+				.when("/find",{
+					template:"<h1>发现</h1>"
+				})
+				.when("/mine",{
+					template:"<h1>我的</h1>"
+				})
+				.otherwise({
+					redirectTo:"/wx"
+				})  //路由重定向
+		}])
+		
+		
+		
+	</script>
+</body>
+</html>

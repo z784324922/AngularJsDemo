@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>过滤器</title>
+	<script type="text/javascript" src="../js/angular.min.js"></script>
+	<style type="text/css">
+		table{
+			margin:30px auto;
+		}
+		td{
+			width: 120px;
+			height: 40px;
+			border: 1px solid #ccc;
+			text-align: center;
+		}
+	</style>
+</head>
+<body ng-app="app" ng-controller="main">
+	<input type="text" ng-model="limitCount">
+
+	<select ng-model="selectColumn">
+		<option value="firstName">姓</option>
+		<option value="lastName">名</option>
+		<option value="gender">性别</option>
+		<option value="salary">薪水</option>
+		<option value="birthday">出生日期</option>
+	</select>
+	<input type="checkbox" ng-model="reveserFlag"/>  <b>{{reveserFlag?"降序":"升序"}}</b>  
+	<p><input type="text" placeholder="请输入搜索字段" ng-model="searchTxt"></p>
+	<table>
+		<thead>
+			<td>序号</td>
+			<td>姓</td>
+			<td>名</td>
+			<td>性别</td>
+			<td>薪水1</td>
+			<td>薪水2</td>
+			<td>出生日期1</td>
+			<td>出生日期2</td>
+			<td>手机号</td>
+		</thead>
+		<tbody>
+			<tr ng-repeat="e in emp  | limitTo:limitCount
+									 | orderBy:selectColumn:reveserFlag
+									 | filter :{$:searchTxt}
+			">
+				<td ng-bind="{{$index}}"></td>
+				<td>{{e.firstName | upper}}</td>
+				<td ng-bind="e.lastName | lowercase "></td>
+				<td >{{e.gender  |sex }}</td>
+				<td>{{e.salary | mic:4  }}</td>
+				<td ng-bind="e.salary | currency:'¥':3 "></td>
+				<td>{{e.birthday  | date : 'yyyy-MM-dd' }}</td>
+				<td>{{e.birthday | date: 'yy/MM/dd' }}</td>
+				<td>{{e.tel | tel:' '}}</td>
+			</tr>
+		</tbody>
+	</table>
+	<!-- 
+	angular 官方自定义好过滤器
+	|  管道符  声明过滤器
+	uppercase 
+	lowercase
+	currency  货币
+	date  日期 
+
+	limitTo 限制数量
+
+	orderBy  排序  默认 升序  false
+	orderBy:'字段' ：升序降序 (false/true)
+	默认 升序  ： false
+		 降序  ： true
+
+	orderBy:'-salary '  相反排序 
+	orderBy:['salary','-birthday']
+	
+	filter:{'firstName':'s'}  搜索firstName 包含s 的姓 
+	filter:{'子集合':string }
+	filter:{$:string}  $ 表示搜索所有的子集合 
+
+
+	 -->
+
+	<script type="text/javascript">
+		var app = angular.module("app",[])
+			.controller("main",['$scope',($scope)=>{
+				var employees = [{
+						firstName: "Fang",
+						lastName: "vane",
+						gender: "Male",
+						salary:12333.496,
+						birthday:new Date('2007-7-11'),
+						tel:"13812345678"   
+					}, {
+						firstName: "Sara",
+						lastName: "rose",
+						gender: "Female",
+						salary:232334.23,
+						birthday:new Date('1997-2-3'),
+						tel:"13812345678"
+					}, {
+						firstName: "Mark",
+						lastName: "bear",
+						gender: "Male",
+						salary:68000,
+						birthday:new Date('1968-03-22'),
+						tel:"13812345678"
+					}, {
+						firstName: "Pam",
+						lastName: "hot",
+						gender: "Male",
+						salary:1234567.11,
+						birthday:new Date('1986-3-4'),
+						tel:"13812345678"
+					},
+					{
+						firstName: "nie",
+						lastName: "XIAOFENG",
+						gender: "Male",
+						salary:6680.5,
+						birthday:new Date('1986-3-4'),
+						tel:"13812345678"
+					}
+				]
+
+				$scope.emp = employees;
+				$scope.limitCount = 5;
+				$scope.selectColumn = "salary";
+				$scope.reveserFlag = true;
+				$scope.searchTxt =  'a';
+			}])
+
+			.filter("upper",()=>{
+				return function(e){
+					//  e 就是要过滤的对象
+					return  e.toUpperCase();
+				}
+			})
+
+			.filter("sex",()=>{
+				return function(sex){
+					var txt = "";
+					switch(sex){
+						case "Male" :
+						txt = "男";
+						break;
+						case "Female":
+						txt = "女";
+						break;
+						default:
+						txt = "未知";
+						break;
+					}
+					return txt;
+				}
+			})
+			.filter("mic",()=>{
+				return (e,n)=>{
+					n = n || 2;
+					return e.toFixed(n);   //保留多少位小数
+				}
+			})
+			.filter("tel",()=>{
+				return (e,str)=>{
+					e=e.split("");   //变为数组
+					e.splice(3,0,str);   //插入的下标  
+					e.splice(8,0,str);
+					return e.join("");
+				}
+			})
+	</script>
+</body>
+</html>

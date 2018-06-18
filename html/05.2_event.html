@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>ng-repeat</title>
+	<script type="text/javascript" src="../js/angular.min.js"></script>
+	<style type="text/css">
+		td{
+			width: 120px;
+			height: 40px;
+			border: 1px solid #ccc;
+			text-align: center;
+		}
+		.box{
+			width:100px;
+			height:100px;
+			background: red;
+		}
+	</style>
+</head>
+<body ng-app="app" ng-controller="main">
+	<div ng-controller="duMather">
+		<h1>{{name}}</h1>
+		<h1>地址:{{address}}</h1>
+		<button ng-click="go()">搬家</button>
+		<div ng-controller="du">
+		 	<h1>{{name}}</h1>
+		 	<h1>{{address}}</h1>
+		 	<button>{{txt}}</button>
+		</div>
+
+		<div ng-controller="duGril">
+			<h1>{{name}}</h1>
+			<button ng-click="callDu()">{{txt}}</button>
+		</div>
+	</div>
+	<!-- 
+		控制器 之间的通信
+		$on   监听事件
+		$emit 发送事件  给父级发送 
+		$broadcast  广播事件
+		
+	 -->
+	<script type="text/javascript">
+		var app = angular.module("app",[])
+
+		app.controller("main",['$scope',()=>{
+
+		}])
+
+		app.controller("duMather",($scope)=>{
+			$scope.name = "我是阿杜的妈妈";
+			$scope.address = "湖北武汉市武昌区";
+			$scope.go = function(){
+				$scope.address = "千锋教育附加陪读"
+			}
+
+			$scope.$on("callToDu",function(event,data){
+				console.log(event);
+				console.log(data);
+				// 向外广播 消息   向下广播 
+				$scope.$broadcast("yourGirlCall")
+			})
+		})
+
+		app.controller("du",($scope)=>{
+			$scope.name = "我是小小杜";
+			$scope.address= "千锋教育";
+			$scope.txt =  "待机中..."
+			$scope.$on("yourGirlCall",function(){
+				$scope.txt = "接听电话..."
+			})
+		});
+
+
+		app.controller("duGril",($scope)=>{
+			$scope.name = "我是小小杜的女朋友小芳";
+			$scope.txt = "待机中...";
+			$scope.callDu = function(){
+				console.log("给小杜打电话");
+				//  发送事件  
+				$scope.$emit("callToDu",{ divName: "Self", description: "向父传播数据" });
+				$scope.txt = "正在给du连接"
+			}
+		})
+	</script>
+</body>
+</html>
+
+

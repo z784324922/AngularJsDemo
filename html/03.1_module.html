@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>expression</title>
+	<script type="text/javascript" src="../js/angular.min.js"></script>
+	<style type="text/css">
+		td{
+			width: 120px;
+			height: 40px;
+			border: 1px solid #ccc;
+			text-align: center;
+		}
+	</style>
+</head>
+<body ng-app="app" ng-controller="main">
+	
+	<!-- 
+	module 就是 angular 主程序， 定义angular 的应用 ，包含许多模块 controller service filters
+	angular.module("app",[])
+	[] 依赖其他js 模板 
+	
+	controller是js function，它主要作用就是建立Model来协助view层进行显示。
+	ng-controller 声明 控制器 
+	定义控制器 
+	app.controller()
+	
+	$scope angular $开头声明都是服务 services
+	就是一个包含当前控制器内所有的方法和数据(应用程序) 的集合 (对象)
+	key-value
+
+	mvc 
+	model angular数据模型
+	views 页面视图
+	controller  angular js逻辑操作 方法实现  数据变更
+	
+	angular 数据双向绑定
+	修改view    更新model
+	修改model   更新views
+
+	通过 ng-model指令 把angular 的 数据模型 绑定到对应的scope 的 dom 元素上
+	当你通过控制器去修改model的时候， angular 会马上把这个修改变化打到dom元素上
+	当你改变views上 ng-model 绑定的值得时候，angular 也会马上吧 这个修改 传递给 model
+	
+
+	// 当你修改 views 值，然后就触发 angular $digest() 循环   这个函数会去遍历所有 的 ng-model
+	// 也就是你绑定 的应用程序   执行 $watch 方法  会去比较 所有 ng-model 的 oldValue 和 newValue的值
+	// 如果 oldvalue 和newvalue的值，不相同 ，然后就去把newvalue的值(修改的值)重新显示到 view去，
+	// 也会把newValue 修改到model 模型数据去
+	// angular 内置 $digest()  脏检查
+
+	 -->
+		<h1 ng-bind="msg"></h1>
+		<input type="text" ng-model="firstname">
+		<input type="text" ng-model="lastname">
+		<h1>{{firstname +' '+ lastname}}</h1>
+		<h2 ng-bind="firstname + ' ' + lastname"></h2>
+
+		<h2>{{fullname}}</h2>
+		<input type="text" ng-model="obj.age">
+
+		<h1>{{now}}</h1>
+	 <div ng-controller="myCon">
+		<h2>{{msg}}</h2>
+	 </div>
+	<script type="text/javascript">
+		var app = angular.module("app",[])
+			.controller("main",($scope)=>{
+				$scope.msg = "hello angular";
+				$scope.firstname = "peng";
+				$scope.lastname="zhan";
+				$scope.obj = {
+					age:28
+				}
+				$scope.fullname = $scope.firstname + "-" + $scope.lastname;
+				// $on $watch $filter $emit 
+				// $scope.$watch("firstname",(newVal,oldVal)=>{
+				// 	console.log(newVal);
+
+				// 	$scope.fullname = newVal + "-" + $scope.lastname;
+				// });
+
+				// $scope.$watch("lastname",(newVal,oldVal)=>{
+				// 	$scope.fullname = $scope.firstname + "-" + newVal;
+				// })
+
+				$scope.$watch("firstname+''+lastname",()=>{
+					$scope.fullname =  $scope.firstname + "-" + $scope.lastname;
+				})
+
+				// 深度监听   true 表示深度监听
+				console.log($scope);
+				$scope.$watch("obj",(newVal,oldVal)=>{
+					console.log(newVal);
+				},true);
+
+				function getNow(){
+					var date = new Date();
+					var hour = date.getHours();
+					var minutes = date.getMinutes();
+					
+					var second = date.getSeconds();
+					console.log(second);
+					return hour+":"+minutes+":"+second;
+				}
+
+				$scope.now = getNow();
+				//  浏览器计时器 对象  
+				//  javascript的上下文 
+				// $apply 执行angular 上下文以外的函数赋值或者变量赋值
+				// swiper 实例化  $scope.$apply() 
+				window.setInterval(()=>{
+					console.log($scope);
+					$scope.now = getNow();
+					$scope.$apply();
+				},1000)
+			})
+
+
+
+			.controller("myCon",($scope)=>{
+				$scope.msg = "我是小米";
+			})
+	</script>
+</body>
+</html>

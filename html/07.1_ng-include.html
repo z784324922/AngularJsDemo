@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>自定义指令 --  directives </title>
+	<script type="text/javascript" src="../js/angular.min.js"></script>
+</head>
+<body ng-app="app" ng-controller="main">
+	
+	<select ng-model="yourSelect">
+		<option value="../tpl/list.html" >列表</option>
+		<option value="../tpl/table.html"  >表格</option>
+	</select>
+	
+	<div ng-include="yourSelect">
+	</div>
+	<!--
+		ng-include 加载模板页面   传入src路径
+		如果直接传路径的，要 当做字符串传，加引号
+	-->
+	<script type="text/javascript">
+		var app = angular.module("app",[])
+			.controller("main",($scope)=>{
+				var employees = [{
+					firstName: "Fang",
+					lastName: "vane",
+					gender: "Male"
+				}, {
+					firstName: "Sara",
+					lastName: "rose",
+					gender: "Female"
+				}, {
+					firstName: "Mark",
+					lastName: "bear",
+					gender: "Male"
+				}, {
+					firstName: "Pam",
+					lastName: "hot",
+					gender: "Male"
+				}];
+				
+				$scope.emp = employees;
+				
+				$scope.yourSelect = '../tpl/table.html';
+			})
+	</script>
+</body>
+</html>

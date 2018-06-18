@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>过滤器</title>
+	<script type="text/javascript" src="../js/angular.min.js"></script>
+	<script src="../js/jquery-1.10.1.min.js"></script>
+	<style type="text/css">
+		table{
+			margin:30px auto;
+		}
+		td{
+			width: 120px;
+			height: 40px;
+			border: 1px solid #ccc;
+			text-align: center;
+		}
+		
+	</style>
+</head>
+<body ng-app="app" ng-controller="main">
+		
+	<div ng-controller="red">
+		<p>rootColor==={{rootColor}}</p>
+		<p>红色controller:<span ng-show="red">这是红色控制器</span></p>
+		<p>绿色控制器:<span ng-show="green">这是绿色控制器</span></p>
+		<h1>{{num}}</h1>
+	</div>
+	<div ng-controller="green">
+		<p>rootColor==={{rootColor}}</p>
+		<p>红色controller:<span ng-show="red">这是红色控制器</span></p>
+		<p>绿色控制器:<span ng-show="green">这是绿色控制器</span></p>
+		<button ng-click="add()">add</button>
+	</div>
+	<!--
+		$rootScope  全局环境 对象  
+		定义属于全局的 数据 方法
+	-->
+	<script type="text/javascript">
+
+		var app = angular.module("app",[]);
+		app.run(["$rootScope",($rootScope)=>{
+			// run angular初始化执行  
+			// 初始化配置信息
+			$rootScope.num = 100;
+		}])
+		app.controller("main",($scope)=>{
+			
+		})
+		app.controller("red",($scope,$rootScope)=>{
+			$rootScope.rootColor = "我是属于全局的颜色属性";
+			$rootScope.red = "red";
+			
+		});
+		app.controller("green",($scope,$rootScope)=>{
+			$scope.green = "green";
+			$scope.add = function(){
+				$rootScope.num += 10;
+			}
+		})
+		
+	</script>
+</body>
+</html>

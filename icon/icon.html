@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>微信</title>
+		<link rel="stylesheet" href="demo.css" />
+		<!--必须引入iconfont.css-->
+		<link rel="stylesheet" href="iconfont.css" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
+		<style>
+			ul{
+				display: flex;
+				width: 100%;
+				position: fixed;
+				background: #f4f4f4;
+				bottom:0;
+				left: 0;
+			}
+			li{
+				flex:1;
+				height:50px;
+				display: flex;
+				flex-direction: column;
+				border-top:1px solid #ddd;
+				cursor: pointer;
+			}
+			i,b{
+				display: flex;
+				justify-content: center;
+			}
+			.active{
+				color:#0fa10f;
+			}
+			.iconfont{
+				font-size:20px;
+			}
+		</style>
+	</head>
+	<body>
+		<ul>
+			<li class="active">
+				<i class="iconfont">&#xe63c;</i>
+				<b>微信</b>
+			</li>
+			<li>
+				<i class="iconfont">&#xe6be;</i>
+				<b>通讯录</b>
+			</li>
+			<li>
+				<i class="iconfont">&#xe609;</i>
+				<b>发现</b>
+			</li>
+			<li>
+				<i class="iconfont">&#xe614;</i>
+				<b>我</b>
+			</li>
+		</ul>
+	</body>
+</html>

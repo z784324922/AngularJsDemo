@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>过滤器</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" href="../icon/iconfont.css" />
+	<link rel="stylesheet" href="../css/footer.css" />
+	<link rel="stylesheet" type="text/css" href="../css/wx.css">
+	<script type="text/javascript" src="../js/angular.min.js"></script>
+	<script src="../js/jquery-1.10.1.min.js"></script>
+	<style type="text/css">
+		
+	</style>
+</head>
+<body ng-app="app" >
+	
+	<div ng-controller="countryController">
+		<h1>{{name}}</h1>
+		<div ng-controller="provincesController">
+			<h1>{{$parent.name}}-{{name}}</h1>
+			<div ng-controller="cityController">
+				<h1>{{$parent.$parent.name}}-{{$parent.name}}-{{name}}</h1>
+			</div>
+		</div>
+	</div>
+	
+	<!-- 
+	控制器别名
+	controllerAs
+	ng-controller="myCountry as country"       
+					控制器名称   控制器别名
+	 -->
+	<div ng-controller="myCountry as country">
+	    <h1>{{country.name}}</h1>
+		<div ng-controller="myProvinces as provices" >
+		<h1>{{country.name}}--{{provices.name}}</h1>
+			<div ng-controller="myCity as city">
+				<h1>{{country.name}}--{{provices.name}}--{{city.name}}</h1>
+			</div>
+		</div>
+	</div>
+	<script src="../js/angular-route.min.js"></script>
+	
+	<script>
+	
+		var app = angular.module("app",['ngRoute'])
+		.controller("countryController",function($scope){
+			$scope.name = "中国";
+		})	
+		.controller("provincesController",function($scope){
+			$scope.name = "湖北";
+		})	
+		.controller("cityController",function($scope){
+			$scope.name = "武汉"
+		})
+		.controller("myCountry",function(){
+			//  控制器别名 就无需使用$scope
+			//  用 this 代替 $scope    指向控制器别名  this.name = country.name
+			this.name =  "中国";
+		})
+		.controller("myProvinces",function(){
+			this.name = "广东";
+		})
+		.controller("myCity",function(){
+			this.name = "深圳"
+		})
+	</script>	
+</body>
+</html>

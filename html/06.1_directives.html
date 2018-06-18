@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>自定义指令 --directives </title>
+	<script type="text/javascript" src="../js/angular.min.js"></script>
+
+</head>
+<body ng-app="app" ng-controller="main">
+	<my-button></my-button>
+	<div class="my-button"></div>
+	<div my-button></div>
+
+	<div myerror ></div>
+	<myerror></myerror>
+	<!-- 
+	自定义指令 app.directive(name,callback)
+	命名方式遵循驼峰式写法
+	restrict 允许或者指定你可以用什么方法去调用 自定义指令 默认 EA
+	E   element 元素名
+	C   class   类名
+	A   attribute 属性 
+	M   注释 
+	-->
+	<script type="text/javascript">
+	var app = angular.module("app",[])
+		.controller("main",["$scope",($scope)=>{
+
+		}]);
+		
+
+		app.directive("myButton",()=>{
+			var direction  =  {};
+			direction.restrict = "EA";
+			direction.template = "<button style='color:red'> 自定义指令btn</button>";
+
+			return direction;
+		})
+
+		app.directive("myerror",()=>{
+			var dir = {};
+			dir.restrict = "EA";
+			dir.templateUrl= "../tpl/error.html";
+			return dir;
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>angular 入门</title>
+	<script type="text/javascript" src="../js/angular.min.js"></script>
+
+</head>
+<body ng-app>
+	<!-- 
+		ng-app  指定angular 应用程序的作用范围 (上下文)
+		ng-model  把dom元素的值绑定到 angular 应用程序(angular 数据 data)  angular 变量 数据模型 (model)  
+		ng-bind  和 {{ }} 作用一致，执行 angular 数据，映射到 dom 上  
+		{{}}  双大括号语法 
+	 -->
+	 <input type="text" ng-model="name">
+	<h1 >{{name}}</h1>
+	<h2 ng-bind="name"></h2>
+	<h1>{{100+200}}</h1>
+	<h1>{{name?"都在吗":"不在啊"}}</h1>
+	<h1 ng-bind="1233"></h1>
+	<h1 ng-bind=""></h1>
+	<h1 ng-html="<b>你在哪里呢???</b>"></h1>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>expression</title>
+	<script type="text/javascript" src="../js/angular.min.js"></script>
+	<style type="text/css">
+		td{
+			width: 120px;
+			height: 40px;
+			border: 1px solid #ccc;
+			text-align: center;
+		}
+	</style>
+</head>
+<body ng-app="app" ng-controller="main" ng-init='myname="zkl"'>
+<!-- 
+	{{  }}  双大括号语法
+	只能在闭合标签 使用    必须包含
+	执行 angular 上下文 数据	
+	字符串  对象  变量 
+
+	ng-click  绑定 点击事件   事件名称必须带 ()
+ -->
+	 <h1>{{myname}}</h1>
+	 <h1>{{msg}}</h1>
+	 <input type="text" ng-model="count">
+	 <input type="text" ng-model="price">
+	 <p>数量:{{count || 0 }}</p>
+	 <p>价格:{{price || 0 }}</p>
+	 <h1>总价:{{count*price}}</h1>
+	 <h1 ng-class="myname?'a':'b'"></h1>
+	 <table>
+		<thead>
+			<td>序号</td>
+			<td>姓名</td>
+			<td>年龄</td>
+			<td>星座</td>
+			<td>薪水</td>
+			<td>操作</td>
+		</thead>
+		<tbody>
+			<tr ng-repeat = "player in play">
+				<td>{{$index+1}}</td>
+				<td>{{player.name}}</td>
+				<td>{{player.age}}</td>
+				<td>{{player.xingZuo}}</td>
+				<td>{{player.salary}}</td>
+				<td><button ng-click="play.splice($index,1)">删除</button></td>
+			</tr>
+		</tbody>
+	 </table>
+	<script type="text/javascript">
+		var app = angular.module("app",[]);
+		// MVC
+		app.controller("main",($scope)=>{
+			$scope.msg = "hello expression";
+			$scope.count = 100;
+			$scope.price = 19.9;
+
+			var playerInfo = [
+				{name:"Kobe",age:39,xingZuo:"摩羯座",salary:"2400"},
+				{name:"kuli",age:29,xingZuo:"摩羯座",salary:"4400"},
+				{name:"ko",age:29,xingZuo:"摩羯座",salary:"4400"},
+				{name:"Jondon",age:50,xingZuo:"水瓶座",salary:"3300"},
+				{name:"James",age:33,xingZuo:"水瓶座",salary:"3900"},
+				{name:"Afusan",age:39,xingZuo:"摩羯座",salary:"1800"},
+				{name:"weide",age:34,xingZuo:"摩羯座",salary:"1500"}
+			];    // javascript  上下文
+
+			$scope.play = playerInfo;  //把 js的变量 赋值给 angular 上下文变量
+
+
+			$scope.del = function(idx){
+				alert(idx);
+				$scope.play.splice(idx,1);
+
+			}
+
+		})
+	</script>
+</body>
+</html>

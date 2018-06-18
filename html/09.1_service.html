@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>过滤器</title>
+	<script type="text/javascript" src="../js/angular.min.js"></script>
+	<style type="text/css">
+		table{
+			margin:30px auto;
+		}
+		td{
+			width: 120px;
+			height: 40px;
+			border: 1px solid #ccc;
+			text-align: center;
+		}
+
+		
+	</style>
+</head>
+<body ng-app="app" ng-controller="main">
+		
+	
+	<!-- 
+	1. 服务  services
+
+	定义的可封装的可重用的函数的内容集合
+
+	2. 可重用 
+	   依赖注入
+	   可测试
+	3. angular 内置 服务  以 $开头 
+	$scope  
+	$filter
+	$timeout
+	$interval
+	$http
+	$location    获取url地址
+	$route
+	$routeParams  
+
+	4. angular 如何自定义服务  
+	a. service   单例模式
+	b. factory   工厂模式
+	c. provider  混合  
+	 -->
+	<div>
+			<h1>url:{{url}}</h1>
+			<h1>protocol:{{protocol}}</h1>
+			<h1>port:{{port}}</h1>
+			<h1>hash:{{hash}}</h1>
+			<h1>host:{{host}}</h1>
+			<h1>{{now}}</h1>
+			<h1>{{word}}</h1>
+			<h1>{{msg}}</h1>
+			<h1>{{num}}</h1>
+			<h1>{{mynum}}</h1>
+			<h1>{{format}}</h1>
+			<h1>{{words}}</h1>
+	</div>	
+	<script type="text/javascript">
+
+		var app = angular.module("app",[])
+
+		.controller("main",["$scope","$location","$interval",'$timeout','$getData','$myFactory','$myProvider',($scope,$location,$interval,$timeout,$getData,$myFactory,$myProvider)=>{
+			console.log($location);
+			$scope.url = $location.absUrl();  // url地址
+			$scope.protocol =  $location.protocol()  // http协议
+			$scope.port = $location.$$port;  //端口
+			$scope.hash = $location.hash(); // hash
+			$scope.host = $location.$$host;  // 主机名
+
+			$interval(()=>{
+				var date = new Date();
+
+				var sec = date.getSeconds();
+				$scope.now = sec;
+			},1000);
+
+			$timeout(()=>{
+				$scope.word = "我希望你们都可以在最快的速度拿到最好的offer";
+				$timeout(()=>{
+					$scope.word = "准备充分,有信心的面试!"
+				},1000)
+			},1000);
+
+
+			var msg = "hello 1000phone";
+
+			$scope.msg = $getData.upper(msg);
+
+			$scope.num = $getData.num(10,3);
+
+			$scope.mynum = $myFactory.number(100,5);
+
+			$scope.format = $myFactory.forMat(167,16);
+			
+			$myFactory.ajax("../data/employee.cfm",function(data){
+				console.log(data);
+			})
+			
+			
+			$myProvider.getId();
+			
+			
+			$scope.words = $myProvider.lower("asdAWEWEQWQEWEWQ");
+		}])
+
+		//  自定义服务 
+		//  单例   
+		//  service this
+		//  this 指向不能使用箭头函数  
+		app.service("$getData",function(){
+
+			this.upper = function(e){
+				console.log(e)
+				return e.toUpperCase();
+			}
+
+			this.number = function(a,b){
+				return Math.pow(a,b);
+			}
+
+			this.num =  function(a,b){
+				return this.number(a,b) + a*b;
+			}
+
+			this.ajax = function(url){
+				
+			}
+		})
+
+
+		// 工厂模式 
+		//  factory  返回是大对象
+		app.factory("$myFactory",function(){
+			return {
+				id:"0007",
+				url:"http://localhost:8020/angular1701",
+				number:function(a,n){
+					n = n || 2;
+					return a.toFixed(n);
+				},
+
+				forMat(e,n){
+					n = n ||10;
+					return e.toString(n);
+				},
+
+				ajax(url,callback){
+					var xhr = new XMLHttpRequest();
+//					var url = this.url + url;
+					console.log(url);
+					xhr.open("GET",url,true);
+					xhr.send();
+					xhr.onreadystatechange = function(){
+						if(xhr.readyState==4&&xhr.status==200){
+							callback(xhr.responseText);
+						}
+					}
+				}
+			}
+		})
+		
+		// provider  
+		//服务的自定义模式
+		
+		app.provider("$myProvider",function(){
+		 	 this.$get = function(){
+		 	 	return {
+		 	 		id:"hello provider",
+		 	 		getId:function(){
+		 	 			console.log(this.id);
+		 	 		},
+		 	 		lower(e){
+		 	 			return e.toLowerCase();
+		 	 		}
+		 	 	}
+		 	 }
+		 });
+		 
+		 
+		 //  provider 服务   必须使用 this.$get   而factory 和  service 可以自己返回  return 
+		 //  provider 和 factory 可以返回 字符串  ，那么service 必须返回的是一个对象或者 null
+	</script>
+</body>
+</html>
