@@ -1,0 +1,13 @@
+<div  class="section">
+	<header>{{weixinCtrl.title}}</header>
+	<h1 ng-bind="weixinCtrl.msg"></h1>
+	<h1>{{weixinCtrl.word}}</h1>
+
+	<p ng-repeat="d in weixinCtrl.data">
+		<b>{{d}}</b>
+	</p>
+
+	<p ng-repeat="d in weixinCtrl.findData">
+		<b>{{d}}</b>
+	</p>
+</div>

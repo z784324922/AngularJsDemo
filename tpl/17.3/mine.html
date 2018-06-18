@@ -1,0 +1,28 @@
+<style type="text/css">
+.clist{
+	list-style: none;
+}
+.clist li{
+	width:100%;
+	height:50px;
+	background: yellowgreen;
+	text-align: center;
+	line-height: 50px;
+	color:#fff;
+	margin:10px 0;
+}
+
+</style>
+
+<div  class="section">
+	<header>{{mineCtrl.title}}</header>
+
+	<div>
+		<h1>你最想去的5大旅游城市:</h1>
+		<ul class="clist">
+			<li ng-repeat="c in mineCtrl.cityList" ng-click="mineCtrl.gotoVisit($index,c.name)"   
+			ui-sref="visit({id:$index,cityName:c.name})"
+			> {{c.name}}</li>
+		</ul>
+	</div>
+</div>

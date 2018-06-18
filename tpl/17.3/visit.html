@@ -1,0 +1,47 @@
+<style type="text/css">
+	.goback{
+		position: absolute;
+		top:0;
+		left: 0;
+		width:50px;
+		height: 50px;
+		text-align: center;
+		line-height: 50px;
+		color:red;
+	}
+	.div{
+		width:100%;
+		height:300px;
+		display: flex;
+		justify-content: center;
+		align-content: center;
+		background: green;
+		color:red;
+	}
+</style>
+
+
+
+<div  class="section">
+	<header >
+		<a class="goback" href="#/mine" >返回</a>
+		<span>{{visitCtrl.title}}</span>
+	</header>
+	
+	<div ng-if="visitCtrl.cityId==0" class="div">
+		<h1>东京</h1>
+	</div>
+	<div ng-if="visitCtrl.cityId==1" class="div">
+		<h1>马尔代夫</h1>
+	</div>
+	<div ng-if="visitCtrl.cityId==2" class="div">
+		<h1>迪拜</h1>
+	</div>
+	<div ng-if="visitCtrl.cityId==3" class="div">
+		<h1>海南</h1>
+	</div>
+	<div ng-if="visitCtrl.cityId==4" class="div">
+		<h1>成都</h1>
+	</div>
+	
+</div>

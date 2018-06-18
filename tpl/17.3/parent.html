@@ -1,0 +1,36 @@
+<style type="text/css">
+	.myview{
+    	border:10px solid red;
+    	box-sizing: border-box;
+		overflow: scroll;
+		display: block;
+		
+    }
+    .goback{
+		position: absolute;
+		top:0;
+		left: 0;
+		width:50px;
+		height: 50px;
+		text-align: center;
+		line-height: 50px;
+		color:red;
+	}
+</style>
+<div  class="section">
+	<header>
+	<a class="goback" ui-sref="parent.phone" ng-show="parentCtrl.showHeader" >返回</a>
+	<span>{{parentCtrl.title}}</span></header>
+	
+	<div>
+		<h2>公司所有的员工总数:{{parentCtrl.parentData.total}} 人</h2>
+		<h2>公司所有的男性员工总数:{{parentCtrl.parentData.Males}} 人</h2>
+
+		<h2>公司所有的女性员工总数:{{parentCtrl.parentData.Females}} 人</h2>
+
+	</div>
+	
+
+	<!-- 接收子路由模板 -->
+	<ui-view class="myview"></ui-view>
+</div>

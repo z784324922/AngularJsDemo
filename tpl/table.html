@@ -1,0 +1,19 @@
+<div>
+	<h1>table</h1>
+	<table>
+		<thead>
+			<td>序号</td>
+			<td>姓</td>
+			<td>名</td>
+			<td>性别</td>
+		</thead>
+		<tbody>
+			<tr ng-repeat="list in emp">
+				<td>{{$index}}</td>
+				<td>{{list.firstName}}</td>
+				<td>{{list.lastName}}</td>
+				<td>{{list.gender}}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

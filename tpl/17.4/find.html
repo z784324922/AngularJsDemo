@@ -1,0 +1,11 @@
+<div  class="section">
+	<header>{{findCtrl.title}}</header>
+
+	<div class="swiper-container" id="swiper">
+		<div class="swiper-wrapper">
+			<div class="swiper-slide" ng-repeat="x in findCtrl.swiperBanner">
+				<img ng-src="{{x.img}}">
+			</div>
+		</div>	
+	</div>
+</div>
