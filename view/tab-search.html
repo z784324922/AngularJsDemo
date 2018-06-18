@@ -1,0 +1,16 @@
+
+<div  class="section">
+	
+
+	<div ng-if="searchCtrl.show">
+		<h1 style="color:deeppink">你输入的姓名不存在</h1>
+	</div>
+
+	<div ng-if="!searchCtrl.show" >
+		<div ng-repeat="x in searchCtrl.empList" style="border-bottom:3px solid red">
+			<h2>姓:{{x.firstName}}</h2>
+			<h2>名:{{x.lastName}}</h2>
+			<h2>联系方式:{{x.tel}}</h2>
+		</div>
+	</div>
+</div>

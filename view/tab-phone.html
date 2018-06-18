@@ -1,0 +1,21 @@
+
+
+<div  class="section">
+	
+	<div>
+		<h1>我是phoneView视图</h1>
+		<div ng-repeat="x in phoneCtrl.list" style="font-size:12px;border-bottom:1px solid red">
+			<h6>姓:{{x.firstName}}</h6>
+			<h6>名:{{x.lastName}}</h6>
+			<h6>性别:{{x.gender}}</h6>
+			<a ui-sref="tabs.detail({id:x.id,name:x.firstName})"  style="font-size: 30px">查看员工详细信息</a>
+		</div>
+	</div>
+
+	<button ng-click="phoneCtrl.reload()" >刷新路由</button>
+
+	<div style="font-size:30px">
+		<input type="text" ng-model="phoneCtrl.searchName" placeholder="请输入要搜索的姓">
+		<button ng-click="phoneCtrl.search(phoneCtrl.searchName)">点击搜索</button>
+	</div>
+</div>
